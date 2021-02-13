@@ -1,0 +1,77 @@
+default_language_version:
+  python: python3.8
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.3.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^.*\.md$
+      - id: end-of-file-fixer
+      - id: debug-statements
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-merge-conflict
+
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.15.0
+    hooks:
+      - id: gitlint
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.25.0
+    hooks:
+      - id: yamllint
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.25.0
+    hooks:
+      - id: markdownlint
+        language_version: system
+
+  - repo: https://github.com/asottile/seed-isort-config
+    rev: v2.2.0
+    hooks:
+      - id: seed-isort-config
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.7.0
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+        additional_dependencies: ['toml', 'pyproject']
+
+  - repo: https://github.com/ambv/black
+    rev: 20.8b1
+    hooks:
+      - id: black
+
+  - repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v2.6.0
+    hooks:
+      - id: pylint
+        exclude: ^.*(migrations/).*$
+        # disabled import-error as may be run out of environment with deps
+        args: ["--disable=import-error"]
+        additional_dependencies: ['toml', 'pyproject']
+
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 5.1.1
+    hooks:
+      - id: pydocstyle
+        exclude: ^.*(migrations/).*$
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.790
+    hooks:
+      - id: mypy
+        args: [
+          --config-file=mypy.ini,
+          --no-incremental,
+          --warn-unused-configs,
+          --no-strict-optional,
+          --ignore-missing-imports
+        ]
+
+        # These folders slow down mypy, so it takes 10x more time.
+        exclude: ^.*(migrations|gunicorn|tests).*$
